@@ -1,4 +1,4 @@
-name: Build and Push to GitHub Container Registry
+name: Build and Push All Wordsmith Images
 
 on:
   push:
@@ -7,22 +7,37 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Log in to GitHub Container Registry
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image (web)
+      - name: Build and push web
         uses: docker/build-push-action@v5
         with:
           context: ./web
           file: ./web/Dockerfile
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/wordsmith-web:latest
+
+      - name: Build and push words
+        uses: docker/build-push-action@v5
+        with:
+          context: ./words
+          file: ./words/Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/wordsmith-words:latest
+
+      - name: Build and push db
+        uses: docker/build-push-action@v5
+        with:
+          context: ./db
+          file: ./db/Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/wordsmith-db:latest
