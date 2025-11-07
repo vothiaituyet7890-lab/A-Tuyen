@@ -1,4 +1,4 @@
-name: Build and Push All Wordsmith Images
+name: Build and Push Web Image
 
 on:
   push:
@@ -28,19 +28,3 @@ jobs:
           file: ./web/Dockerfile
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/wordsmith-web:latest
-
-      - name: Build and push words
-        uses: docker/build-push-action@v5
-        with:
-          context: ./words
-          file: ./words/Dockerfile
-          push: true
-          tags: ghcr.io/${{ github.repository_owner }}/wordsmith-words:latest
-
-      - name: Build and push db
-        uses: docker/build-push-action@v5
-        with:
-          context: ./db
-          file: ./db/Dockerfile
-          push: true
-          tags: ghcr.io/${{ github.repository_owner }}/wordsmith-db:latest
